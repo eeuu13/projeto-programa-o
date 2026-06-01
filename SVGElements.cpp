@@ -20,13 +20,15 @@ namespace svg
 
     // @todo provide the implementation of SVGElement derived classes
     // HERE -->
-    void Circle::Circle(const Color &fill,
+    Circle::Circle(const Color &fill,
                      const Point &center,
-                     const Point &radius)
+                     const int &radius)
         : Ellipse(fill,center,{radius,radius})
 
+    {
+    }
     Polyline::Polyline(const Color &stroke,
-                     const Point* &points)
+                       const vector<Point> &points)
         : stroke(stroke), points(points)
     {
     }
@@ -37,7 +39,7 @@ namespace svg
         }
     }
     Line::Line(const Color &stroke,
-            const Point[2] &points)
+            const vector<Point> &points)
         : Polyline(stroke,points)
     { 
     }
