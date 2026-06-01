@@ -108,8 +108,12 @@ namespace svg
     }
 
     Rectangle::Rectangle(const Color &fill,
-                        const vector<Point> &points)
-        : Polygon(fill,points)
+                         const Point &origin,
+                         const Point &sizes)
+        : Polygon(fill,{origin,
+            {origin.x,origin.y+sizes.y},
+            {origin.x+sizes.x,origin.y+sizes.y},
+            {origin.x+sizes.x,origin.y}})
     {
     }
     
