@@ -33,6 +33,9 @@ namespace svg
     public:
         Ellipse(const Color &fill, const Point &center, const Point &radius);
         void draw(PNGImage &img) const override;
+        void translate(const int &x,const int &y);
+        void rotate(const int &v);
+        void scale(const int &v);
 
     private:
         Color fill;
@@ -51,6 +54,9 @@ namespace svg
     public:
         Polyline(const Color &stroke,const vector<Point> &points);
         void draw(PNGImage &img) const override;
+        void translate(const int &x,const int &y);
+        void rotate(const int &v);
+        void scale(const int &v);
     private:
         Color stroke;
         vector<Point> points;
@@ -67,6 +73,9 @@ namespace svg
     public:
         Polygon(const Color &fill,const vector<Point> &points);
         void  draw (PNGImage &img) const override;
+        void translate(const int &x,const int &y);
+        void rotate(const int &v);
+        void scale(const int &v);
     private:
         Color fill;
         vector<Point> points;
@@ -75,7 +84,7 @@ namespace svg
     class Rectangle : public Polygon
     {
     public:
-        Rectangle(const Color &fill,const vector<Point> &points);
+        Rectangle(const Color &fill,const Point &origin, const Point &sizes);
     };
     
 }
