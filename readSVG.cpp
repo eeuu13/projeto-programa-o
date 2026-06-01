@@ -100,7 +100,7 @@ namespace svg
                 } 
                 svg_elements.push_back(new Polygon(fill, points));
             }
-            else if (child->Name() == "rectangle")
+            else if (child->Name() == "rect")
             {
                 Color fill;
                 vector<Point> points;
