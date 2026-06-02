@@ -1,122 +1,100 @@
-#include "SVGElements.hpp"
-#include <iostream>
+//! @file shape.hpp
+#ifndef __svg_SVGElements_hpp__
+#define __svg_SVGElements_hpp__
+
+#include "Color.hpp"
+#include "Point.hpp"
+#include "PNGImage.hpp"
+using namespace std;
+
 namespace svg
 {
-    // These must be defined!
-    SVGElement::SVGElement() :id_(""){}
-    SVGElement::~SVGElement() {}
-
-    // Ellipse (initial code provided)
-    Ellipse::Ellipse(const Color &fill,
-                     const Point &center,
-                     const Point &radius,
-                     const string &id)
-        : fill(fill), center(center), radius(radius),SVGElement(id)
+    class SVGElement
     {
-    }
-    void Ellipse::draw(PNGImage &img) const
-    {
-        img.draw_ellipse(center, radius, fill);
-    }
-    void Ellipse::translate(const int &x,const int &y){
-        center=center.translate({x,y});
-    }
-    void Ellipse::rotate(const int &v,Point transform_origin){
-        center=center.rotate(transform_origin,v);
-    }
-    void Ellipse::scale(const int &v,Point transform_origin){
-        radius.y*=v;
-        radius.x*=v;
-        center=center.scale(transform_origin,v);
 
-    }
+    public:
+        SVGElement();
+        SVGElement(const string &id):id_(id){};
+        virtual ~SVGElement();
+        virtual void draw(PNGImage &img) const = 0;
+        virtual void translate(const int &x,const int &y) =0;
+        virtual void rotate(const int &v,Point transform_origin)=0;
+        virtual void scale(const int &v,Point transform_origin)=0;
+        string get_id(){return id_;};
 
-    // @todo provide the implementation of SVGElement derived classes
-    // HERE -->
-    Circle::Circle(const Color &fill,
-                     const Point &center,
-                     const int &radius,
-                     const string &id)
-        : Ellipse(fill,center,{radius,radius},id)
-
-    {
-    }
-    Polyline::Polyline(const Color &stroke,
-                       const vector<Point> &points
-                       ,const string &id)
-        : stroke(stroke), points(points),SVGElement(id)
-    {
-    }
-    void Polyline::draw(PNGImage &img) const
-    {
-        for (unsigned long i=0;i<points.size()-1;i++){
-            img.draw_line(points[i],points[i+1],stroke);
-        }
-    }
-    void Polyline::translate(const int &x, const int &y){
-        for (unsigned long i=0;i<points.size();i++){
-            points[i]=points[i].translate({x,y});
-        }
-    }
-
-    void Polyline::rotate(const int &v,Point transform_origin){
-        for (unsigned long i=0;i<points.size();i++){
-            points[i]=points[i].rotate(transform_origin,v);
-        }
-    }
-
-    void Polyline::scale(const int &v,Point transform_origin){
-        for (unsigned long i=0;i<points.size();i++){
-            points[i]=points[i].scale(transform_origin,v);
-        }
-    }
-
-    Line::Line(const Color &stroke,
-            const vector<Point> &points,
-            const string &id)
-        : Polyline(stroke,points,id)
-    { 
-    }
-    Polygon::Polygon(const Color &fill,
-                     const vector<Point> &points,
-                     const string &id)
-        : fill(fill), points(points),SVGElement(id)
-    {
-    }
-    void Polygon::draw(PNGImage &img) const
-    {
-        img.draw_polygon(points,fill);
-    }
-
-    void Polygon::translate(const int &x, const int &y){
-        for (unsigned long i=0;i<points.size();i++){
-            points[i]=points[i].translate({x,y});
-        }
-    }
-
-    void Polygon::rotate(const int &v,Point transform_origin){
-        for (unsigned long i=0;i<points.size();i++){
-            points[i]=points[i].rotate(transform_origin,v);
-        }
-    }
-
-    void Polygon::scale(const int &v,Point transform_origin){
-        for (unsigned long i=0;i<points.size();i++){
-            points[i]=points[i].scale(transform_origin,v);
-        }
-    }
-
-    Rectangle::Rectangle(const Color &fill,
-                         const Point &origin,
-                         const Point &sizes,
-                         const string &id)
-        : Polygon(fill,{origin,
-            {origin.x+sizes.x-1,origin.y},
-            {origin.x+sizes.x-1,origin.y+sizes.y-1},
-            {origin.x,origin.y+sizes.y-1}},
-            id)
-    {
-    }
+    private:
+    string id_;
+    };
     
 
+    // Declaration of namespace functions
+    // readSVG -> implement it in readSVG.cpp
+    // convert -> already given (DO NOT CHANGE) in convert.cpp
+
+    void readSVG(const std::string &svg_file,
+                 Point &dimensions,
+                 std::vector<SVGElement *> &svg_elements);
+    void convert(const std::string &svg_file,
+                 const std::string &png_file);
+
+    class Ellipse : public SVGElement
+    {
+    public:
+        Ellipse(const Color &fill, const Point &center, const Point &radius,const string &id);
+        void draw(PNGImage &img) const override;
+        void translate(const int &x,const int &y) override;
+        void rotate(const int &v,Point transform_origin) override;
+        void scale(const int &v,Point transform_origin) override;
+
+    private:
+        Color fill;
+        Point center;
+        Point radius;
+    };
+
+    class Circle : public Ellipse
+    {
+    public:
+        Circle(const Color &fill, const Point &center, const int &radius,const string &id);
+    };
+    
+    class Polyline: public SVGElement
+    {
+    public:
+        Polyline(const Color &stroke,const vector<Point> &points,const string &id);
+        void draw(PNGImage &img) const override;
+        void translate(const int &x,const int &y) override;
+        void rotate(const int &v,Point transform_origin) override;
+        void scale(const int &v,Point transform_origin) override;
+    private:
+        Color stroke;
+        vector<Point> points;
+    };
+
+    class Line : public Polyline{
+    public:
+        Line(const Color &stroke,const vector<Point> &points,const string &id);
+
+    };
+
+    class Polygon : public SVGElement
+    {
+    public:
+        Polygon(const Color &fill,const vector<Point> &points,const string &id);
+        void  draw (PNGImage &img) const override;
+        void translate(const int &x,const int &y) override;
+        void rotate(const int &v,Point transform_origin) override;
+        void scale(const int &v,Point transform_origin) override;
+    private:
+        Color fill;
+        vector<Point> points;
+    };
+
+    class Rectangle : public Polygon
+    {
+    public:
+        Rectangle(const Color &fill,const Point &origin, const Point &sizes,const string &id);
+    };
+    
 }
+#endif
