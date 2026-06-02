@@ -3,14 +3,15 @@
 namespace svg
 {
     // These must be defined!
-    SVGElement::SVGElement() {}
+    SVGElement::SVGElement() :id_(""){}
     SVGElement::~SVGElement() {}
 
     // Ellipse (initial code provided)
     Ellipse::Ellipse(const Color &fill,
                      const Point &center,
-                     const Point &radius)
-        : fill(fill), center(center), radius(radius)
+                     const Point &radius,
+                     const string &id)
+        : fill(fill), center(center), radius(radius),SVGElement(id)
     {
     }
     void Ellipse::draw(PNGImage &img) const
@@ -34,14 +35,16 @@ namespace svg
     // HERE -->
     Circle::Circle(const Color &fill,
                      const Point &center,
-                     const int &radius)
-        : Ellipse(fill,center,{radius,radius})
+                     const int &radius,
+                     const string &id)
+        : Ellipse(fill,center,{radius,radius},id)
 
     {
     }
     Polyline::Polyline(const Color &stroke,
-                       const vector<Point> &points)
-        : stroke(stroke), points(points)
+                       const vector<Point> &points
+                       ,const string &id)
+        : stroke(stroke), points(points),SVGElement(id)
     {
     }
     void Polyline::draw(PNGImage &img) const
@@ -69,13 +72,15 @@ namespace svg
     }
 
     Line::Line(const Color &stroke,
-            const vector<Point> &points)
-        : Polyline(stroke,points)
+            const vector<Point> &points,
+            const string &id)
+        : Polyline(stroke,points,id)
     { 
     }
     Polygon::Polygon(const Color &fill,
-                     const vector<Point> &points)
-        : fill(fill), points(points)
+                     const vector<Point> &points,
+                     const string &id)
+        : fill(fill), points(points),SVGElement(id)
     {
     }
     void Polygon::draw(PNGImage &img) const
@@ -103,11 +108,13 @@ namespace svg
 
     Rectangle::Rectangle(const Color &fill,
                          const Point &origin,
-                         const Point &sizes)
+                         const Point &sizes,
+                         const string &id)
         : Polygon(fill,{origin,
-            {origin.x,origin.y+sizes.y-1},
+            {origin.x+sizes.x-1,origin.y},
             {origin.x+sizes.x-1,origin.y+sizes.y-1},
-            {origin.x+sizes.x-1,origin.y}})
+            {origin.x,origin.y+sizes.y-1}},
+            id)
     {
     }
     
