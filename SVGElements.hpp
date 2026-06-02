@@ -14,13 +14,18 @@ namespace svg
 
     public:
         SVGElement();
+        SVGElement(const string &id):id_(id){};
         virtual ~SVGElement();
         virtual void draw(PNGImage &img) const = 0;
         virtual void translate(const int &x,const int &y) =0;
         virtual void rotate(const int &v,Point transform_origin)=0;
         virtual void scale(const int &v,Point transform_origin)=0;
+        string get_id(){return id_;};
 
+    private:
+    string id_;
     };
+    
 
     // Declaration of namespace functions
     // readSVG -> implement it in readSVG.cpp
@@ -35,7 +40,7 @@ namespace svg
     class Ellipse : public SVGElement
     {
     public:
-        Ellipse(const Color &fill, const Point &center, const Point &radius);
+        Ellipse(const Color &fill, const Point &center, const Point &radius,const string &id);
         void draw(PNGImage &img) const override;
         void translate(const int &x,const int &y) override;
         void rotate(const int &v,Point transform_origin) override;
@@ -50,13 +55,13 @@ namespace svg
     class Circle : public Ellipse
     {
     public:
-        Circle(const Color &fill, const Point &center, const int &radius);
+        Circle(const Color &fill, const Point &center, const int &radius,const string &id);
     };
     
     class Polyline: public SVGElement
     {
     public:
-        Polyline(const Color &stroke,const vector<Point> &points);
+        Polyline(const Color &stroke,const vector<Point> &points,const string &id);
         void draw(PNGImage &img) const override;
         void translate(const int &x,const int &y) override;
         void rotate(const int &v,Point transform_origin) override;
@@ -68,14 +73,14 @@ namespace svg
 
     class Line : public Polyline{
     public:
-        Line(const Color &stroke,const vector<Point> &points);
+        Line(const Color &stroke,const vector<Point> &points,const string &id);
 
     };
 
     class Polygon : public SVGElement
     {
     public:
-        Polygon(const Color &fill,const vector<Point> &points);
+        Polygon(const Color &fill,const vector<Point> &points,const string &id);
         void  draw (PNGImage &img) const override;
         void translate(const int &x,const int &y) override;
         void rotate(const int &v,Point transform_origin) override;
@@ -88,7 +93,7 @@ namespace svg
     class Rectangle : public Polygon
     {
     public:
-        Rectangle(const Color &fill,const Point &origin, const Point &sizes);
+        Rectangle(const Color &fill,const Point &origin, const Point &sizes,const string &id);
     };
     
 }
