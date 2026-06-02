@@ -1,5 +1,5 @@
 #include "SVGElements.hpp"
-
+#include <iostream>
 namespace svg
 {
     // These must be defined!
@@ -20,12 +20,10 @@ namespace svg
     void Ellipse::translate(const int &x,const int &y){
         center=center.translate({x,y});
     }
-    void Ellipse::rotate(const int &v){
-        Point transform_origin={0,0};//TO DO: change into the input
+    void Ellipse::rotate(const int &v,Point transform_origin){
         center=center.rotate(transform_origin,v);
     }
-    void Ellipse::scale(const int &v){
-        Point transform_origin={0,0};//TO DO: change into the input
+    void Ellipse::scale(const int &v,Point transform_origin){
         radius.y*=v;
         radius.x*=v;
         center=center.scale(transform_origin,v);
@@ -58,15 +56,13 @@ namespace svg
         }
     }
 
-    void Polyline::rotate(const int &v){
-        Point transform_origin={0,0};//TO DO: change into the input
+    void Polyline::rotate(const int &v,Point transform_origin){
         for (unsigned long i=0;i<points.size();i++){
             points[i]=points[i].rotate(transform_origin,v);
         }
     }
 
-    void Polyline::scale(const int &v){
-        Point transform_origin={0,0};//TO DO: change into the input
+    void Polyline::scale(const int &v,Point transform_origin){
         for (unsigned long i=0;i<points.size();i++){
             points[i]=points[i].scale(transform_origin,v);
         }
@@ -93,15 +89,13 @@ namespace svg
         }
     }
 
-    void Polygon::rotate(const int &v){
-        Point transform_origin={0,0};//TO DO: change into the input
+    void Polygon::rotate(const int &v,Point transform_origin){
         for (unsigned long i=0;i<points.size();i++){
             points[i]=points[i].rotate(transform_origin,v);
         }
     }
 
-    void Polygon::scale(const int &v){
-        Point transform_origin={0,0};//TO DO: change into the input
+    void Polygon::scale(const int &v,Point transform_origin){
         for (unsigned long i=0;i<points.size();i++){
             points[i]=points[i].scale(transform_origin,v);
         }
@@ -111,9 +105,9 @@ namespace svg
                          const Point &origin,
                          const Point &sizes)
         : Polygon(fill,{origin,
-            {origin.x,origin.y+sizes.y},
-            {origin.x+sizes.x,origin.y+sizes.y},
-            {origin.x+sizes.x,origin.y}})
+            {origin.x,origin.y+sizes.y-1},
+            {origin.x+sizes.x-1,origin.y+sizes.y-1},
+            {origin.x+sizes.x-1,origin.y}})
     {
     }
     
