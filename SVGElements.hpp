@@ -16,6 +16,10 @@ namespace svg
         SVGElement();
         virtual ~SVGElement();
         virtual void draw(PNGImage &img) const = 0;
+        virtual void translate(const int &x,const int &y) =0;
+        virtual void rotate(const int &v,Point transform_origin)=0;
+        virtual void scale(const int &v,Point transform_origin)=0;
+
     };
 
     // Declaration of namespace functions
@@ -33,9 +37,9 @@ namespace svg
     public:
         Ellipse(const Color &fill, const Point &center, const Point &radius);
         void draw(PNGImage &img) const override;
-        void translate(const int &x,const int &y);
-        void rotate(const int &v);
-        void scale(const int &v);
+        void translate(const int &x,const int &y) override;
+        void rotate(const int &v,Point transform_origin) override;
+        void scale(const int &v,Point transform_origin) override;
 
     private:
         Color fill;
@@ -54,9 +58,9 @@ namespace svg
     public:
         Polyline(const Color &stroke,const vector<Point> &points);
         void draw(PNGImage &img) const override;
-        void translate(const int &x,const int &y);
-        void rotate(const int &v);
-        void scale(const int &v);
+        void translate(const int &x,const int &y) override;
+        void rotate(const int &v,Point transform_origin) override;
+        void scale(const int &v,Point transform_origin) override;
     private:
         Color stroke;
         vector<Point> points;
@@ -73,9 +77,9 @@ namespace svg
     public:
         Polygon(const Color &fill,const vector<Point> &points);
         void  draw (PNGImage &img) const override;
-        void translate(const int &x,const int &y);
-        void rotate(const int &v);
-        void scale(const int &v);
+        void translate(const int &x,const int &y) override;
+        void rotate(const int &v,Point transform_origin) override;
+        void scale(const int &v,Point transform_origin) override;
     private:
         Color fill;
         vector<Point> points;
