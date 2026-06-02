@@ -64,6 +64,7 @@ namespace svg
                     Color fill;
                     Point center, radius, transform_origin = {0, 0};
                     string trans = " ";
+                    string id= " ";
                     for (const XMLAttribute *attr = child->FirstAttribute(); attr != nullptr; attr = attr->Next())
                     {
                         if ((string)attr->Name() == "fill") fill = parse_color(attr->Value());
@@ -73,12 +74,14 @@ namespace svg
                         else if ((string)attr->Name() == "ry") radius.y = attr->IntValue();
                         else if ((string) attr->Name() == "transform-origin") transform_origin = parse_single(attr->Value());
                         else if ((string) attr->Name() == "transform") trans = attr->Value();
+                        else if ((string) attr->Name() == "id") id = attr->Value();
                     }
-                    SVGElement* object = new Ellipse(fill, center, radius);
-                    for (pair<string,Point> prev_trans:prev_transforms){
+                    SVGElement* object = new Ellipse(fill, center, radius,id);
+                    apply_transform(trans, object, svg_elements,transform_origin);
+                    for (int i=prev_transforms.size()-1;i>=0;i--){
+                        pair<string,Point> prev_trans=prev_transforms[i];
                         apply_transform(prev_trans.first,object,svg_elements,prev_trans.second);
                     }
-                    apply_transform(trans, object, svg_elements,transform_origin);
                     svg_elements.push_back(object);
                 }
                 else if ((string)child->Name() == "circle")
@@ -87,6 +90,7 @@ namespace svg
                     Point center, transform_origin = {0, 0};
                     int radius;
                     string trans = " ";
+                    string id= " ";
                     for (const XMLAttribute *attr = child->FirstAttribute(); attr != nullptr; attr = attr->Next())
                     {
                         if ((string)attr->Name() == "fill") fill = parse_color(attr->Value());
@@ -95,12 +99,14 @@ namespace svg
                         else if ((string)attr->Name() == "r") radius = attr->IntValue();
                         else if ((string) attr->Name() == "transform-origin") transform_origin = parse_single(attr->Value());
                         else if ((string) attr->Name() == "transform") trans = attr->Value();
+                        else if ((string) attr->Name() == "id") id = attr->Value();
                     }
-                    SVGElement* object = new Circle(fill, center, radius);
-                    for (pair<string,Point> prev_trans:prev_transforms){
+                    SVGElement* object = new Circle(fill, center, radius,id);
+                    apply_transform(trans, object, svg_elements,transform_origin);
+                    for (int i=prev_transforms.size()-1;i>=0;i--){
+                        pair<string,Point> prev_trans=prev_transforms[i];
                         apply_transform(prev_trans.first,object,svg_elements,prev_trans.second);
                     }
-                    apply_transform(trans, object, svg_elements,transform_origin);
                     svg_elements.push_back(object);
                 }
                 else if ((string)child->Name() == "polyline")
@@ -109,18 +115,21 @@ namespace svg
                     vector<Point> points;
                     Point transform_origin = {0, 0};
                     string trans = " ";
+                    string id = " ";
                     for (const XMLAttribute *attr = child->FirstAttribute(); attr != nullptr; attr = attr->Next())
                     {
                         if ((string) attr->Name() == "stroke") stroke = parse_color(attr->Value());
                         else if ((string)attr->Name() == "points") points = parse_points(attr->Value());
                         else if ((string) attr->Name() == "transform-origin") transform_origin = parse_single(attr->Value());
                         else if ((string) attr->Name() == "transform") trans = attr->Value();
+                        else if ((string) attr->Name() == "id") id = attr->Value();
                     } 
-                    SVGElement* object = new Polyline(stroke, points);
-                    for (pair<string,Point> prev_trans:prev_transforms){
+                    SVGElement* object = new Polyline(stroke, points,id);
+                    apply_transform(trans, object, svg_elements,transform_origin);
+                    for (int i=prev_transforms.size()-1;i>=0;i--){
+                        pair<string,Point> prev_trans=prev_transforms[i];
                         apply_transform(prev_trans.first,object,svg_elements,prev_trans.second);
                     }
-                    apply_transform(trans, object, svg_elements,transform_origin);
                     svg_elements.push_back(object);
                 }
                 else if ((string) child->Name() == "line")
@@ -128,7 +137,7 @@ namespace svg
                     Color stroke;
                     Point point1, point2, transform_origin = {0, 0};
                     string trans = " ";
-                    
+                    string id = " ";
                     for (const XMLAttribute *attr = child->FirstAttribute(); attr != nullptr; attr = attr->Next())
                     {
                         if ((string) attr->Name() == "stroke") stroke = parse_color(attr->Value());
@@ -138,12 +147,14 @@ namespace svg
                         else if ((string) attr->Name() == "y2") point2.y = attr->IntValue();
                         else if ((string) attr->Name() == "transform-origin") transform_origin = parse_single(attr->Value());
                         else if ((string) attr->Name() == "transform") trans = attr->Value();
+                        else if ((string) attr->Name() == "id") id = attr->Value();
                     } 
-                    SVGElement* object = new Line(stroke, vector<Point>{point1, point2});
-                    for (pair<string,Point> prev_trans:prev_transforms){
+                    SVGElement* object = new Line(stroke, vector<Point>{point1, point2},id);
+                    apply_transform(trans, object, svg_elements,transform_origin);
+                    for (int i=prev_transforms.size()-1;i>=0;i--){
+                        pair<string,Point> prev_trans=prev_transforms[i];
                         apply_transform(prev_trans.first,object,svg_elements,prev_trans.second);
                     }
-                    apply_transform(trans, object, svg_elements,transform_origin);
                     svg_elements.push_back(object);
                 }
                 else if ((string)child->Name() == "polygon")
@@ -152,18 +163,21 @@ namespace svg
                     vector<Point> points;
                     Point transform_origin = {0, 0};
                     string trans = " ";
+                    string id = " ";
                     for (const XMLAttribute *attr = child->FirstAttribute(); attr != nullptr; attr = attr->Next())
                     {
                         if ((string)attr->Name() == "fill") fill = parse_color(attr->Value());
                         else if ((string)attr->Name() == "points") points = parse_points(attr->Value());
                         else if ((string) attr->Name() == "transform-origin") transform_origin = parse_single(attr->Value());
                         else if ((string) attr->Name() == "transform") trans = attr->Value();
+                        else if ((string) attr->Name() == "id") id = attr->Value();
                     } 
-                    SVGElement* object = new Polygon(fill, points);
-                    for (pair<string,Point> prev_trans:prev_transforms){
+                    SVGElement* object = new Polygon(fill, points,id);
+                    apply_transform(trans, object, svg_elements,transform_origin);
+                    for (int i=prev_transforms.size()-1;i>=0;i--){
+                        pair<string,Point> prev_trans=prev_transforms[i];
                         apply_transform(prev_trans.first,object,svg_elements,prev_trans.second);
                     }
-                    apply_transform(trans, object, svg_elements,transform_origin);
                     svg_elements.push_back(object);
                 }
                 else if ((string) child->Name() == "rect")
@@ -171,6 +185,7 @@ namespace svg
                     Color fill;
                     Point origin, size, transform_origin = {0, 0};
                     string trans = " ";
+                    string id = " ";
                     for (const XMLAttribute *attr = child->FirstAttribute(); attr != nullptr; attr = attr->Next())
                     {
                         if ((string) attr->Name() == "fill") fill = parse_color(attr->Value());
@@ -180,12 +195,14 @@ namespace svg
                         else if ((string) attr->Name() == "height") size.y = attr->IntValue();
                         else if ((string) attr->Name() == "transform-origin") transform_origin = parse_single(attr->Value());
                         else if ((string) attr->Name() == "transform") trans = attr->Value();
+                        else if ((string) attr->Name() == "id") id = attr->Value();
                     } 
-                    SVGElement* object = new Rectangle(fill, origin, size);
-                    for (pair<string,Point> prev_trans:prev_transforms){
+                    SVGElement* object = new Rectangle(fill, origin, size,id);
+                    apply_transform(trans, object, svg_elements,transform_origin);
+                    for (int i=prev_transforms.size()-1;i>=0;i--){
+                        pair<string,Point> prev_trans=prev_transforms[i];
                         apply_transform(prev_trans.first,object,svg_elements,prev_trans.second);
                     }
-                    apply_transform(trans, object, svg_elements,transform_origin);
                     svg_elements.push_back(object);
                 }
                 else if (string(child->Name()) == "g")
@@ -202,6 +219,25 @@ namespace svg
                     }
                     transforms.push_back(last);
                     a_child(child, svg_elements,transforms);
+                }
+                else if (string(child->Name()) == "use"){
+                    Point transform_origin = {0, 0};
+                    string trans = " ";
+                    string href= " ";
+                    string id= " ";
+                    for (const XMLAttribute *attr = child->FirstAttribute(); attr != nullptr; attr = attr->Next())
+                    {
+                        if ((string) attr->Name() == "transform-origin") transform_origin = parse_single(attr->Value());
+                        else if ((string) attr->Name() == "transform") trans = attr->Value();
+                        else if ((string) attr->Name() == "href") href = attr->Value();
+                    }
+                    href=href.substr(1,href.size()-1);
+                    for (SVGElement* element:svg_elements){
+                        if (element->get_id()==href){
+                            auto new_element= new SVGElement element;//////////////////////////////////////////////////////////////////////
+                            new_element = 
+                        }
+                    }
                 }
             } 
         }
